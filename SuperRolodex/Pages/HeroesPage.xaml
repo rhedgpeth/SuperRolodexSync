@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<pages:BaseContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:SuperRolodex.Controls"
+    xmlns:converters="clr-namespace:SuperRolodex.Converters"
+    xmlns:pages="clr-namespace:Robo.Mvvm.Forms.Pages;assembly=Robo.Mvvm.Forms"
+    xmlns:vm="clr-namespace:SuperRolodex.Core.ViewModels;assembly=SuperRolodex.Core"
+    xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+    x:TypeArguments="vm:HeroesViewModel"
+    x:Class="SuperRolodex.Pages.HeroesPage"
+    Title="Heroes">
+    <pages:BaseContentPage.ToolbarItems>
+        <ToolbarItem Command="{Binding AddCommand}" Order="Primary" Text="Add" />
+    </pages:BaseContentPage.ToolbarItems>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:SyncStatusToColorConverter x:Key="syncStatusToColor" />
+            <converters:ByteToImageFieldConverter x:Key="byteToImageSource" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <pages:BaseContentPage.Content>
+        <StackLayout>
+            <BoxView BackgroundColor="Gray" HeightRequest="1" HorizontalOptions="FillAndExpand" />
+            <controls:ListView
+                    ItemsSource="{Binding Heroes}"
+                    ItemTappedCommand="{Binding EditCommand}"
+                    SeparatorVisibility="None" 
+                    HasUnevenRows="true">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell>
+                            <ViewCell.ContextActions>
+                                <MenuItem Clicked="Handle_Context_Clicked" CommandParameter="{Binding .}" Text="Delete" IsDestructive="True" />
+                            </ViewCell.ContextActions>
+                            <StackLayout>
+
+                                <Grid Padding="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="65" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="*" />
+                                        <RowDefinition Height="*" />
+                                    </Grid.RowDefinitions>
+
+                                    <ff:CachedImage Grid.Column="0" Grid.RowSpan="2"
+                                                    Source="{Binding ImageData, Converter={StaticResource byteToImageSource}}"
+                                                    Aspect="AspectFit" WidthRequest="50" HeightRequest="50"
+                                                     />
+
+                                    <Label Grid.Column="1" Grid.Row="0" Text="{Binding Alias}"
+                                           FontSize="Large" FontAttributes="Bold" />
+
+                                    <Label Grid.Column="1" Grid.Row="1" Text="{Binding Name}" />
+                                </Grid>
+                                <BoxView BackgroundColor="Gray" HeightRequest="1" HorizontalOptions="FillAndExpand" />
+                            </StackLayout> 
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </controls:ListView>
+            <Button Text="{Binding SyncStatusDescription}"
+                    Command="{Binding ToggleSyncStatusCommand}"
+                    BackgroundColor="{Binding SyncStatus, Converter={StaticResource syncStatusToColor}}"
+                    TextColor="White" FontSize="Large"
+                    HeightRequest="75" HorizontalOptions="FillAndExpand" />
+        </StackLayout>
+    </pages:BaseContentPage.Content>
+</pages:BaseContentPage>
