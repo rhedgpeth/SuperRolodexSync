@@ -50,7 +50,7 @@ namespace SuperRolodex.Repositories
                     {
                         if (e?.Results != null && e.Error == null)
                         {
-                            heroes = e.Results.AllResults()?.ToObjects<Hero>(databaseName) as List<Hero>;
+                            heroes = e.Results.AllResults()?.ToObjects<Hero>() as List<Hero>;
 
                             if (heroes != null)
                             {
